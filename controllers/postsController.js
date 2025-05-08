@@ -97,20 +97,14 @@ function modify(req, res) {
 }
 
 function destroy(req, res) {
-    const id = parseInt(req.params.id);
-    const post = posts.findIndex(post => post.id === id);
+    const { id } = req.params;
 
-    if (post < 0) {
-        return res.status(404).json({
-            status: 404,
-            error: "Not Found",
-            message: "Post non trovato"
-        });
-    }
+    const sql = 'DELETE FROM posts WHERE id = ?';
 
-    posts.splice(post, 1);
-    console.log(posts);
-    res.sendStatus(204);
+    connection.query(sql, [id], (err) => {
+        if (err) return res.status(500).json({ error: 'Failed to delete post' });
+        res.sendStatus(204);
+    });
 }
 
 module.exports = { index, show, store, update, modify, destroy };

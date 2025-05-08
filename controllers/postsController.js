@@ -3,15 +3,13 @@ const connection = require('../data/db');
 
 function index(req, res) {
 
-    let filteredPosts = posts;
-    let tag = req.query.tag;
+    const sql = 'SELECT * FROM posts';
 
-    if (tag) {
-        let capitalizeTag = tag[0].toUpperCase() + tag.slice(1);
-        filteredPosts = posts.filter(post => post.tags.includes(capitalizeTag));
-    }
+    connection.query(sql, (err, results) => {
+        if (err) return res.status(500).json({ error: 'Database query failed' });
+        res.json(results);
+    });
 
-    res.json(filteredPosts);
 }
 
 function show(req, res) {
